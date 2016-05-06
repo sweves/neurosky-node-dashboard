@@ -11,7 +11,7 @@ var particleSystem;
 var elements;
 var z_value = 15;
 var control = 0;
-var z_controller;
+var z_controller = 0;
 var cubes = [];
 var speed = 6;
 var objects = [];
@@ -23,10 +23,41 @@ init();
 render();
 
 function init() {
+	// Setup Environment
+	setupEnv();
 
-	// Controlling the Z position of the cubes
-	z_controller = 0;
+	// Adding Particles
+	addParticleSystem();
 
+	// speed beams
+	addSpeedBeams();
+
+	//tunnel
+	addTunnel();
+
+	//asteriod
+	addAsteriods();
+
+	setInterval(function() {
+		object.position.z = camera.position.z - 2000;
+		for (var i = 0; i < objects.length; i++){
+			object = objects[i];
+			object.position.z = (Math.random() * -1000) + (camera.position.z - 2000);
+		}
+	}, 10000);
+
+	setInterval(function() {
+		particleSystem.position.z = camera.position.z - 2000;
+	}, 8000);
+
+	setInterval(function() {
+		for (var e = 0; e < cubes.length; e++) {
+			cubes[e].position.z = (Math.random() * 1000 - 500) + camera.position.z - 2000;
+		}
+	}, 9000);
+}
+
+function setupEnv() {
 	/*
 		PerspectiveCamera( fov, aspect, near, far )
 		fov — Camera frustum vertical field of view.
@@ -76,115 +107,63 @@ function init() {
 	glitchPass = new THREE.GlitchPass();
 	glitchPass.renderToScreen = true;
 	composer.addPass(glitchPass);
-
-	// Adding Particles
-	addParticleSystem();
-
-	// speed beams
-	addSpeedBeams();
-
-	//tunnel
-	addTunnel();
-
-	//asteriod
-	addAsteriods();
-
-	setInterval(function() {
-		object.position.z = camera.position.z - 2000;
-		for (var i = 0; i < objects.length; i++){
-			object = objects[i];
-			object.position.z = (Math.random() * -1000) + (camera.position.z - 2000);
-		}
-	}, 10000);
-
-	setInterval(function() {
-		particleSystem.position.z = camera.position.z - 2000;
-	}, 8000);
-
-	setInterval(function() {
-		for (var e = 0; e < cubes.length; e++) {
-			cubes[e].position.z = (Math.random() * 1000 - 500) + camera.position.z - 2000;
-		}
-	}, 9000);
 }
 
-
 function render() {
-
-
-	requestAnimationFrame(render); // pauses when browser tab switched
-
+	requestAnimationFrame(render);
 
 	var time = Date.now();
 
-	// z.speed.cube
-	for (var i = 0; i< cubes.length; i++){
+	for (var i = 0; i < cubes.length; i++) {
 		cube = cubes[i];
 		cube.position.z += speed;
-		if(cube.position.z > 1000){
+		if (cube.position.z > 1000) {
 			cube.position.z -= 5000;
 		}
-
 	}
 
-
 	// cube objects cluster
-	for (var i = 0; i < objects.length; i++){
+	for (var i = 0; i < objects.length; i++) {
 		object = objects[i];
-		// object.scale.x = object.scale.x+0.1*Math.sin(time/500);
-		// object.scale.y = object.scale.x+0.1*Math.sin(time/500);
-		// object.scale.z = object.scale.x+0.1*Math.sin(time/500);
+		object.scale.x = object.scale.x+0.1*Math.sin(time / 500);
+		object.scale.y = object.scale.x+0.1*Math.sin(time / 500);
+		object.scale.z = object.scale.x+0.1*Math.sin(time / 500);
 
 		object.rotation.x = object.rotation.x + Math.random()* 10 * 0.001;
 		object.rotation.y = object.rotation.y + Math.random()* 10 * 0.001;
 		object.rotation.z = object.rotation.z + Math.random()* 10 * 0.001;
-
-		// object.position.x = object.position.x + Math.random() * 10-5;
-		// object.position.y = object.position.y + Math.random() * 10-5;
-		// object.position.z = object.position.z + Math.random() * 10-5;
-
-		// if(effectController.yskyrotating == 1){
-		// object.position.x = object.position.x * 0.999 * Math.cos(time/2000);
-		// object.position.y = object.position.y * 0.999 * Math.cos(time/2000);
-		// object.position.z = object.position.z + object.position.z * 0.05;
-		// }
 	}
 
-
-	//tunnel movement
+	// tunnel movement
 	if (elements.children.length > 1) {
-	for(var i=0;i<150;i++){
+		for (var i = 0; i < 150; i++) {
 			var circle = elements.children[i];
-			if(camera.position.z <= circle.position.z){
-				farest-=z_value;
+			if (camera.position.z <= circle.position.z) {
+				farest -= z_value;
 				circle.position.z = farest;
 			}
 		}
 	}
 
-
 	var counter = 0;
-
-	var target = control/3*2;
+	var target = control / 3 * 2;
 	var difference = target - z_controller;
 	z_controller += difference * 0.05;
 
-	elements.position.z= z_controller;
-	// elements.position.z += 7;
+	elements.position.z = z_controller;
 	camera.position.z -=7;
 	light.position.z -= 7;
-	light.position.y = Math.sin(counter/50)*75;
-	light.position.x = Math.cos(counter/50)*75;
-	counter++;
+	light.position.y = Math.sin(counter / 50) * 75;
+	light.position.x = Math.cos(counter / 50) * 75;
+	counter ++;
 
-	//space BG
+	// space BG
 	if (particleSystem) {
 		particleSystem.rotation.x += 0.001;;
 		particleSystem.rotation.y -= 0.001;
 		particleSystem.rotation.z += 0.002;
 	}
 
-	// renderer.render(scene, camera);
 	composer.render();
 }
 
