@@ -1,3 +1,5 @@
+'strict mode';
+
 var socket = io.connect('http://localhost:8080');
 var rangeInput;
 var camera, scene, renderer, composer, ambientLight;
@@ -12,9 +14,12 @@ var elements;
 var z_value = 15;
 var control = 0;
 var z_controller = 0;
-var cubes = [];
+var beams = [];
 var speed = 6;
-var objects = [];
+var asteriods = [];
+var gap = 50;
+var farest = -149 * z_value;
+var focusLevel = 0;
 
 var circleArray = [];
 
@@ -22,6 +27,12 @@ sliderControl();
 init();
 render();
 
+function showAsteriods() {
+	for (var i = 0; i < asteriods.length; i++){
+		asteriod = asteriods[i];
+		asteriod.position.z = (Math.random() * -1000) + (camera.position.z - 2000);
+	}
+}
 function init() {
 	// Setup Environment
 	setupEnv();
@@ -39,22 +50,24 @@ function init() {
 	addAsteriods();
 
 	setInterval(function() {
-		object.position.z = camera.position.z - 2000;
-		for (var i = 0; i < objects.length; i++){
-			object = objects[i];
-			object.position.z = (Math.random() * -1000) + (camera.position.z - 2000);
+		if (focusLevel === 1) {
+			showAsteriods();
 		}
 	}, 10000);
 
 	setInterval(function() {
-		particleSystem.position.z = camera.position.z - 2000;
-	}, 8000);
-
-	setInterval(function() {
-		for (var e = 0; e < cubes.length; e++) {
-			cubes[e].position.z = (Math.random() * 1000 - 500) + camera.position.z - 2000;
+		if (focusLevel <= 2) {
+			for (var e = 0; e < beams.length; e++) {
+				beams[e].position.z = (Math.random() * 1000 - 500) + camera.position.z - 2000;
+			}
 		}
 	}, 9000);
+
+	setInterval(function() {
+		if (focusLevel <= 3) {
+			particleSystem.position.z = camera.position.z - 2000;
+		}
+	}, 8000);
 }
 
 function setupEnv() {
@@ -76,8 +89,6 @@ function setupEnv() {
 	// the renderer's canvas domElement is added to the body
 	document.body.appendChild(renderer.domElement);
 
-	// Defines whether the renderer should sort objects. Default is true.
-	// Note: Sorting is used to attempt to properly render objects that have some degree of transparency. By definition, sorting objects may not work in all cases. Depending on the needs of application, it may be neccessary to turn off sorting and use other methods to deal with transparency rendering e.g. manually determining the object rendering order.
 	renderer.sortObjects = false;
 
 	// Scene
@@ -90,11 +101,9 @@ function setupEnv() {
 	scene.fog = new THREE.Fog(0x000000, 1, 1000);
 	scene.add(camera);
 
-	// AmbientLight - This light's color gets applied to all the objects in the scene globally.
 	ambientLight = new THREE.AmbientLight(0x404040);
 	scene.add(ambientLight);
 
-	// PointLight - Affects objects using MeshLambertMaterial or MeshPhongMaterial.
 	light = new THREE.PointLight(0xffffff, 20 , 900);
 	light.position.set(0, 0, 0);
 	scene.add(light);
@@ -113,34 +122,35 @@ function render() {
 	requestAnimationFrame(render);
 
 	var time = Date.now();
+	var cube;
+	var asteriod;
 
-	for (var i = 0; i < cubes.length; i++) {
-		cube = cubes[i];
+	for (var c = 0; c < beams.length; c++) {
+		cube = beams[c];
 		cube.position.z += speed;
 		if (cube.position.z > 1000) {
 			cube.position.z -= 5000;
 		}
 	}
 
-	// cube objects cluster
-	for (var i = 0; i < objects.length; i++) {
-		object = objects[i];
-		object.scale.x = object.scale.x+0.1*Math.sin(time / 500);
-		object.scale.y = object.scale.x+0.1*Math.sin(time / 500);
-		object.scale.z = object.scale.x+0.1*Math.sin(time / 500);
+	for (var o = 0; o < asteriods.length; o++) {
+		asteriod = asteriods[o];
+		// asteriod.scale.x = asteriod.scale.x + 0.1 * Math.sin(time / 500);
+		// asteriod.scale.y = asteriod.scale.x + 0.1 * Math.sin(time / 500);
+		// asteriod.scale.z = asteriod.scale.x + 0.1 * Math.sin(time / 500);
 
-		object.rotation.x = object.rotation.x + Math.random()* 10 * 0.001;
-		object.rotation.y = object.rotation.y + Math.random()* 10 * 0.001;
-		object.rotation.z = object.rotation.z + Math.random()* 10 * 0.001;
+		asteriod.rotation.x = asteriod.rotation.x + Math.random() * 10 * 0.001;
+		asteriod.rotation.y = asteriod.rotation.y + Math.random() * 10 * 0.001;
+		asteriod.rotation.z = asteriod.rotation.z + Math.random() * 10 * 0.001;
 	}
 
 	// tunnel movement
 	if (elements.children.length > 1) {
-		for (var i = 0; i < 150; i++) {
-			var circle = elements.children[i];
+		for (var t = 0; t < 150; t++) {
+			var circle = elements.children[t];
 			if (camera.position.z <= circle.position.z) {
 				farest -= z_value;
-				circle.position.z = farest;
+				circle.position.z = farest + (circle.position.z + (z_value + gap) * 149 - z_value);
 			}
 		}
 	}
@@ -151,7 +161,7 @@ function render() {
 	z_controller += difference * 0.05;
 
 	elements.position.z = z_controller;
-	camera.position.z -=7;
+	camera.position.z -= 7;
 	light.position.z -= 7;
 	light.position.y = Math.sin(counter / 50) * 75;
 	light.position.x = Math.cos(counter / 50) * 75;
@@ -159,12 +169,13 @@ function render() {
 
 	// space BG
 	if (particleSystem) {
-		particleSystem.rotation.x += 0.001;;
+		particleSystem.rotation.x += 0.001;
 		particleSystem.rotation.y -= 0.001;
 		particleSystem.rotation.z += 0.002;
 	}
 
-	composer.render();
+	// composer.render();
+	renderer.render(scene, camera);
 }
 
 // speed beam
@@ -174,7 +185,7 @@ function addSpeedBeams() {
 		m,
 		cube;
 
-	for (zpos = -4000; zpos < 5000; zpos+= 5){
+	for (zpos = -4000; zpos < 5000; zpos+= 5) {
 		cubeGeometry = new THREE.SphereGeometry(3, 3, 3);
 		m = new THREE.MeshPhongMaterial({
 			color: 0xF7E4BE,
@@ -190,7 +201,7 @@ function addSpeedBeams() {
 		cube.position.multiplyScalar(Math.random() * 10);
 		cube.scale.x = cube.scale.y = 1;
 
-		cubes.push(cube);
+		beams.push(cube);
 		scene.add(cube);
 	}
 }
@@ -215,6 +226,16 @@ function addTunnel() {
 		new THREE.Color('rgb(52,86,120)')
 	];
 
+	/*
+	BoxGeometry(width, height, depth, widthSegments, heightSegments, depthSegments)
+
+	width — Width of the sides on the X axis.
+	height — Height of the sides on the Y axis.
+	depth — Depth of the sides on the Z axis.
+	widthSegments — Optional. Number of segmented faces along the width of the sides. Default is 1.
+	heightSegments — Optional. Number of segmented faces along the height of the sides. Default is 1.
+	depthSegments — Optional. Number of segmented faces along the depth of the sides. Default is 1.
+	*/
 	geometry = new THREE.BoxGeometry(10, 250, z_value);
 	translate = new THREE.Matrix4().makeTranslation(150, 0, 0);
 
@@ -231,10 +252,10 @@ function addTunnel() {
 			circle.add(cube);
 		}
 
-		circle.position.z = -i * (z_value + 50);
+		circle.position.z = -i * (z_value + gap);
 		elements.add(circle);
 	}
-	farest = -149 * z_value;
+
 	scene.add(elements);
 }
 
@@ -245,19 +266,19 @@ function addAsteriods() {
 			color: 0xeeeeee,
 			shading: THREE.FlatShading,
 		});
-		var object = new THREE.Mesh(geometry, meterial);
+		var asteriod = new THREE.Mesh(geometry, meterial);
 
 		// var expandAmount = 1;
-		object.position.set(Math.random() * 2000-1000, Math.random() * 2000-1000, Math.random() * -1000);
-		// object.position.x = 0;
-		// object.position.y = 0;
-		// object.position.z = -100;
-		// object.position.multiplyScalar(expandAmount);
+		asteriod.position.set(Math.random() * 2000-1000, Math.random() * 2000-1000, Math.random() * -1000);
+		// asteriod.position.x = 0;
+		// asteriod.position.y = 0;
+		// asteriod.position.z = -100;
+		// asteriod.position.multiplyScalar(expandAmount);
 
-		object.rotation.set(Math.random()*10-5, Math.random()*10-5, Math.random()*10-5);
-		object.scale.x = object.scale.y = object.scale.z = Math.random()*50;
-		objects.push(object);
-		scene.add(object);
+		asteriod.rotation.set(Math.random()*10-5, Math.random()*10-5, Math.random()*10-5);
+		asteriod.scale.x = asteriod.scale.y = asteriod.scale.z = Math.random()*50;
+		asteriods.push(asteriod);
+		scene.add(asteriod);
 	}
 }
 
@@ -287,27 +308,12 @@ function addParticleSystem() {
 }
 
 function sliderControl() {
-	// var slider = document.getElementById("control");
-	// slider.addEventListener("change", function(){
-	// // z_value = parseInt(slider.value);
-	// control = parseInt(-slider.value*10);
 
-	// // return z_value;
-	// return control;
-	// });
 	average = [];
 	var locked = false;
 
 	socket.on('neurosky', function(data){
-		if (data.poorSignalLevel <= 150 && data.eSense.attention > 0){
-			//waves:
-			//data.eegPower.theta
-			//data.eegPower.lowAlpha
-			//data.eegPower.highAlpha
-			//data.eegPower.lowBeta
-			//data.eegPower.highBeta
-			//data.eegPower.lowGamma
-			//data.eegPower.highGamma
+		if (data.poorSignalLevel <= 150 && data.eSense.attention > 0) {
 
 			if (locked) {
 				control = -(100) * 10;
@@ -324,19 +330,35 @@ function sliderControl() {
 					});
 
 					waveaverage = total/average.length;
-					console.log("wave average: " + waveaverage);
 
 					if (waveaverage >= 80){
 						control = -(100)*10;
 						locked = true;
-					} else{
+					} else {
 						control = -data.eSense.meditation * 10;
 					}
+
+					console.log('waveaverage', waveaverage);
+
+					if (waveaverage > 0 && waveaverage < 40) {
+						console.log('weak');
+						focusLevel = 1;
+					} else if (waveaverage > 40 && waveaverage < 70) {
+						focusLevel = 2;
+						console.log('medium');
+					} else if (waveaverage > 70 && waveaverage < 80) {
+						focusLevel = 3;
+						console.log('strong');
+					}
+
+					console.log('focusLevel', focusLevel);
+
 				} else{
 					average.push(data.eSense.meditation);
 				}
-				console.log(average);
-				console.log("control: " + control);
+				// console.log(average);
+				// console.log("control: " + control);
+
 			}
 		}
 		return control;
