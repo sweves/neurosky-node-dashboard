@@ -19,20 +19,14 @@ var speed = 6;
 var asteriods = [];
 var gap = 50;
 var farest = -149 * z_value;
-var focusLevel = 0;
+var focusLevel = 1;
 
 var circleArray = [];
-
+var stopped = false;
 sliderControl();
 init();
 render();
 
-function showAsteriods() {
-	for (var i = 0; i < asteriods.length; i++){
-		asteriod = asteriods[i];
-		asteriod.position.z = (Math.random() * -1000) + (camera.position.z - 2000);
-	}
-}
 function init() {
 	// Setup Environment
 	setupEnv();
@@ -49,9 +43,17 @@ function init() {
 	//asteriod
 	addAsteriods();
 
+	// Start to loop beams, particles and asteriods
+	startVisualLoops();
+}
+
+function startVisualLoops() {
 	setInterval(function() {
 		if (focusLevel === 1) {
-			showAsteriods();
+			for (var i = 0; i < asteriods.length; i++){
+				asteriod = asteriods[i];
+				asteriod.position.z = (Math.random() * -1000) + (camera.position.z - 2000);
+			}
 		}
 	}, 10000);
 
@@ -108,8 +110,6 @@ function setupEnv() {
 	light.position.set(0, 0, 0);
 	scene.add(light);
 
-	// postprocessing
-	// http://codepen.io/ryonakae/pen/PPKxyw
 	composer = new THREE.EffectComposer(renderer);
 	composer.addPass(new THREE.RenderPass(scene, camera));
 
@@ -121,11 +121,15 @@ function setupEnv() {
 function render() {
 	requestAnimationFrame(render);
 
-	var time = Date.now();
-	var cube;
-	var asteriod;
+	var time = Date.now(),
+		cube,
+		asteriod,
+		c,
+		o,
+		t,
+		circle;
 
-	for (var c = 0; c < beams.length; c++) {
+	for (c = 0; c < beams.length; c++) {
 		cube = beams[c];
 		cube.position.z += speed;
 		if (cube.position.z > 1000) {
@@ -133,11 +137,11 @@ function render() {
 		}
 	}
 
-	for (var o = 0; o < asteriods.length; o++) {
+	for (o = 0; o < asteriods.length; o++) {
 		asteriod = asteriods[o];
-		// asteriod.scale.x = asteriod.scale.x + 0.1 * Math.sin(time / 500);
-		// asteriod.scale.y = asteriod.scale.x + 0.1 * Math.sin(time / 500);
-		// asteriod.scale.z = asteriod.scale.x + 0.1 * Math.sin(time / 500);
+		asteriod.scale.x = asteriod.scale.x + 0.1 * Math.sin(time / 500);
+		asteriod.scale.y = asteriod.scale.x + 0.1 * Math.sin(time / 500);
+		asteriod.scale.z = asteriod.scale.x + 0.1 * Math.sin(time / 500);
 
 		asteriod.rotation.x = asteriod.rotation.x + Math.random() * 10 * 0.001;
 		asteriod.rotation.y = asteriod.rotation.y + Math.random() * 10 * 0.001;
@@ -146,8 +150,8 @@ function render() {
 
 	// tunnel movement
 	if (elements.children.length > 1) {
-		for (var t = 0; t < 150; t++) {
-			var circle = elements.children[t];
+		for (t = 0; t < 150; t++) {
+			circle = elements.children[t];
 			if (camera.position.z <= circle.position.z) {
 				farest -= z_value;
 				circle.position.z = farest + (circle.position.z + (z_value + gap) * 149 - z_value);
@@ -160,22 +164,27 @@ function render() {
 	var difference = target - z_controller;
 	z_controller += difference * 0.05;
 
-	elements.position.z = z_controller;
-	camera.position.z -= 7;
-	light.position.z -= 7;
-	light.position.y = Math.sin(counter / 50) * 75;
-	light.position.x = Math.cos(counter / 50) * 75;
-	counter ++;
+	if (!stopped) {
+		elements.position.z = z_controller;
+		camera.position.z -= 7;
+		light.position.z -= 7;
+		light.position.y = Math.sin(counter / 50) * 75;
+		light.position.x = Math.cos(counter / 50) * 75;
+		counter ++;
 
-	// space BG
-	if (particleSystem) {
-		particleSystem.rotation.x += 0.001;
-		particleSystem.rotation.y -= 0.001;
-		particleSystem.rotation.z += 0.002;
+		// space BG
+		if (particleSystem) {
+			particleSystem.rotation.x += 0.001;
+			particleSystem.rotation.y -= 0.001;
+			particleSystem.rotation.z += 0.002;
+		}
 	}
 
-	// composer.render();
-	renderer.render(scene, camera);
+	if (focusLevel <= 2) {
+		composer.render();
+	} else {
+		renderer.render(scene, camera);
+	}
 }
 
 // speed beam
@@ -260,23 +269,17 @@ function addTunnel() {
 }
 
 function addAsteriods() {
-	for (var i = 0; i < 200; i ++){
-		var geometry = new THREE.SphereGeometry(1,1,1);
+	for (var i = 0; i < 200; i ++) {
+		var geometry = new THREE.SphereGeometry(1, 1, 1);
 		var meterial = new THREE.MeshPhongMaterial({
 			color: 0xeeeeee,
 			shading: THREE.FlatShading,
 		});
 		var asteriod = new THREE.Mesh(geometry, meterial);
 
-		// var expandAmount = 1;
 		asteriod.position.set(Math.random() * 2000-1000, Math.random() * 2000-1000, Math.random() * -1000);
-		// asteriod.position.x = 0;
-		// asteriod.position.y = 0;
-		// asteriod.position.z = -100;
-		// asteriod.position.multiplyScalar(expandAmount);
-
-		asteriod.rotation.set(Math.random()*10-5, Math.random()*10-5, Math.random()*10-5);
-		asteriod.scale.x = asteriod.scale.y = asteriod.scale.z = Math.random()*50;
+		asteriod.rotation.set(Math.random() * 10-5, Math.random() * 10-5, Math.random() * 10-5);
+		asteriod.scale.x = asteriod.scale.y = asteriod.scale.z = Math.random() * 50;
 		asteriods.push(asteriod);
 		scene.add(asteriod);
 	}
@@ -308,18 +311,16 @@ function addParticleSystem() {
 }
 
 function sliderControl() {
-
 	average = [];
 	var locked = false;
 
 	socket.on('neurosky', function(data){
 		if (data.poorSignalLevel <= 150 && data.eSense.attention > 0) {
-
 			if (locked) {
 				control = -(100) * 10;
-				console.log("shoot!");
+				stopped = true;
+				console.log('Completed!');
 			} else {
-
 				if (average.length >= 6) {
 					average.splice(0, 1);
 					average.push(data.eSense.meditation);
@@ -338,27 +339,19 @@ function sliderControl() {
 						control = -data.eSense.meditation * 10;
 					}
 
-					console.log('waveaverage', waveaverage);
-
 					if (waveaverage > 0 && waveaverage < 40) {
-						console.log('weak');
 						focusLevel = 1;
 					} else if (waveaverage > 40 && waveaverage < 70) {
 						focusLevel = 2;
-						console.log('medium');
 					} else if (waveaverage > 70 && waveaverage < 80) {
 						focusLevel = 3;
-						console.log('strong');
 					}
 
 					console.log('focusLevel', focusLevel);
 
-				} else{
+				} else {
 					average.push(data.eSense.meditation);
 				}
-				// console.log(average);
-				// console.log("control: " + control);
-
 			}
 		}
 		return control;

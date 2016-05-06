@@ -1,52 +1,28 @@
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title> brain_visual</title>
-  <link rel = "sytlesheet" href = "sytle.css">
+	<head>
+		<meta charset="UTF-8">
+		<title>Finding Focus</title>
 
-  <!--socket.io-->
-  <script src = "https://cdn.socket.io/socket.io-1.2.0.js"> </script>
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"> </script>
+		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+	</head>
 
+	<body style="margin: 0; padding: 0;">
+		<div id="container"></div>
 
-  <!--jquery-->
-  <script src = "http://code.jquery.com/jquery-1.11.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css">
+		<!-- three.js -->
+		<script language="javascript" type="text/javascript" src="js/three.min.js"></script>
+		<script language="javascript" type="text/javascript" src="js/three.js"></script>
 
-    
-
-</head>
-
-<body>
-
-    <div id="container"> 
-<!--     <input type="range" name="control" id="control" value="0" min="0" max="100"> -->
-    </div>
-
-
-  <!-- three.js -->
-  <script language="javascript" type="text/javascript" src="js/three.min.js"></script>
-  <script language="javascript" type="text/javascript" src="js/three.js"></script>
-
-  <!--postprocessing: glitch -->  
-  <script language="javascript" type="text/javascript" src="/addons/CopyShader.js"></script>
-  <script language="javascript" type="text/javascript" src="/addons/DigitalGlitch.js"></script>
-  <script language="javascript" type="text/javascript" src="/addons/EffectComposer.js"></script>
-  <script language="javascript" type="text/javascript" src="/addons/GlitchPass.js"></script>
-  <script language="javascript" type="text/javascript" src="/addons/MaskPass.js"></script>
-  <script language="javascript" type="text/javascript" src="/addons/RenderPass.js"></script>
-  <script language="javascript" type="text/javascript" src="/addons/ShaderPass.js"></script>
-
-
-
-
-
-  <script language="javascript" type="text/javascript" src="js/sketch.js"></script>
-
-
-
-
-  
-
-</body>
+		<!--postprocessing: glitch -->
+		<script language="javascript" type="text/javascript" src="/addons/CopyShader.js"></script>
+		<script language="javascript" type="text/javascript" src="/addons/DigitalGlitch.js"></script>
+		<script language="javascript" type="text/javascript" src="/addons/EffectComposer.js"></script>
+		<script language="javascript" type="text/javascript" src="/addons/GlitchPass.js"></script>
+		<script language="javascript" type="text/javascript" src="/addons/MaskPass.js"></script>
+		<script language="javascript" type="text/javascript" src="/addons/RenderPass.js"></script>
+		<script language="javascript" type="text/javascript" src="/addons/ShaderPass.js"></script>
+		<script language="javascript" type="text/javascript" src="js/sketch.js"></script>
+	</body>
 </html>
