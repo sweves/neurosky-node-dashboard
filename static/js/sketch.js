@@ -149,18 +149,11 @@ function render() {
 	}
 
 	// tunnel movement
-
 	for (t = 0; t < 150; t++) {
 		circle = elements.children[t];
-		// console.log('camera.position.z', camera.position.z);
-		// console.log('circle.position.z', circle.position.z);
 		if (camera.position.z <= circle.position.z) {
-			console.log('t is relocated to the back!', t);
-			// console.log('!!!!!!! farest -' + ((t + 1) * 50 + (15 * t)));
-			// farest = farest - ((t + 1) * 50 + (15 * t));
 			farest -= gap;
 			circle.position.z = farest;
-			// console.log('farest', farest);
 		}
 	}
 
