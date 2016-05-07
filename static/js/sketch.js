@@ -18,7 +18,7 @@ var beams = [];
 var speed = 6;
 var asteriods = [];
 var gap = 50;
-var farest = -149 * z_value;
+var farest;
 var focusLevel = 1;
 
 var circleArray = [];
@@ -149,13 +149,18 @@ function render() {
 	}
 
 	// tunnel movement
-	if (elements.children.length > 1) {
-		for (t = 0; t < 150; t++) {
-			circle = elements.children[t];
-			if (camera.position.z <= circle.position.z) {
-				farest -= z_value;
-				circle.position.z = farest + (circle.position.z + (z_value + gap) * 149 - z_value);
-			}
+
+	for (t = 0; t < 150; t++) {
+		circle = elements.children[t];
+		// console.log('camera.position.z', camera.position.z);
+		// console.log('circle.position.z', circle.position.z);
+		if (camera.position.z <= circle.position.z) {
+			console.log('t is relocated to the back!', t);
+			// console.log('!!!!!!! farest -' + ((t + 1) * 50 + (15 * t)));
+			// farest = farest - ((t + 1) * 50 + (15 * t));
+			farest -= gap;
+			circle.position.z = farest;
+			// console.log('farest', farest);
 		}
 	}
 
@@ -248,7 +253,8 @@ function addTunnel() {
 	geometry = new THREE.BoxGeometry(10, 250, z_value);
 	translate = new THREE.Matrix4().makeTranslation(150, 0, 0);
 
-	for (i = 0; i < 150; i++) {
+	var maxCircleCount = 150;
+	for (i = 0; i < maxCircleCount; i++) {
 		circle = new THREE.Object3D(0,0,0);
 		circle.scale.x = 4/1.5;
 		circle.scale.y = 3/1.5;
@@ -265,6 +271,7 @@ function addTunnel() {
 		elements.add(circle);
 	}
 
+	farest = -maxCircleCount * z_value + -(maxCircleCount - 1) * gap;
 	scene.add(elements);
 }
 
