@@ -3,16 +3,16 @@ var app = express();
 var path = require('path');
 var csv = require('csv');
 
-app.get('/',function(req,res){
-	res.render('visualizer.html')
+app.get('/', function(req,res) {
+	res.render('index.html')
 });
 
-app.set('views',__dirname + '/views');
+app.set('views', __dirname + '/app');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, '/app')));
 
-var server = app.listen(8080,function(){
+var server = app.listen(8080,function() {
 	console.log('Express is running on port 8080');
 });
 
@@ -20,8 +20,8 @@ var io = require('socket.io')(server);
 var neurosky = require('node-neurosky');
 
 var client = neurosky.createClient({
-	appName:'NeuroSky',
-	appKey:'0fc4141b4b45c675cc8d3a765b8d71c5bde9390'
+	appName: 'NeuroSky',
+	appKey: '0fc4141b4b45c675cc8d3a765b8d71c5bde9390'
 });
 
 var $socket;
