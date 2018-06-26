@@ -1,5 +1,5 @@
 var socket = io.connect("http://localhost:8080");
-
+var demo = true;
 var incomingsignal = false;
 var incomingdata = false;
 var incomingfilename = false;
@@ -20,9 +20,6 @@ var highgammawave;
 $("#start").hide();
 $("#datavis").hide();
 
-if (ready === "false") {
-}
-
 var csv = [
   [
     "delta",
@@ -38,7 +35,28 @@ var csv = [
   ]
 ];
 
+if (demo === true) {
+  $("#loadinggif").hide();
+  $("#noconnectionsubmit")
+    .unbind()
+    .click(function() {
+      var noconnectionfilename = $("#noconnectionfilename").val();
+      var regex = /^[a-zA-Z]*$/;
+      console.log(regex.test(noconnectionfilename));
+      console.log(noconnectionfilename.length > 0);
+      if (regex.test(noconnectionfilename) && noconnectionfilename.length > 0) {
+        $(".blackout").hide();
+        $("#datavis").show();
+        $("#testname").text(noconnectionfilename);
+      } else {
+        alert("please use only letters in your test name");
+      }
+    });
+}
+
 socket.on("neurosky", function(data) {
+  $("#loadinggif").hide();
+  demo = false;
   socket.emit("signal", data.poorSignalLevel);
 
   if (data.poorSignalLevel >= 150) {

@@ -52,6 +52,44 @@ li {
   padding: 30px;
 }
 
+a,
+a:hover {
+  color: #00ffff;
+}
+
+.source-code {
+  display: block;
+  font-size: 80%;
+}
+
+.no-connection {
+  border: solid #444 1px;
+  padding: 20px;
+}
+
+.no-connection-name {
+  display: block;
+  font-size: 80%;
+  margin: 20px 0;
+}
+
+.no-connection-input {
+  border-color: #bbb;
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 7px;
+  color: #bbb;
+}
+
+.no-connection svg {
+  display: inline-block;
+  vertical-align: bottom;
+  height: 25px;
+  cursor: pointer;
+  fill: #0f0;
+  margin-left: 5px;
+}
+
 .loading {
   width: 120px;
   height: 120px;
@@ -68,6 +106,10 @@ input {
   display: inline;
   width: 100px;
   margin: 0;
+  background: transparent;
+  border: #444 2px solid;
+  outline-style: none;
+  box-shadow: none;
 }
 
 .pending {
