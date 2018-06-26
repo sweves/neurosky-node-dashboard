@@ -1,103 +1,98 @@
-body, html{
-	margin: 0;
-	padding: 0;
-	background-color: #111;
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: #111;
 }
 
-
-
-h1{
-	font-family: 'Dosis', sans-serif;
-	font-weight: 200;
-	font-size: 40px;
-	color: #BBB;
-	letter-spacing: 2px;
-	
+h1 {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 40px;
+  color: #bbb;
+  letter-spacing: 2px;
 }
 
-
-
-p{
-	font-family: 'Dosis', sans-serif;
-	font-weight: 200;
-	font-size: 20px;
-	color: #BBB;
-	margin: 0;
-	letter-spacing: 2px;
-	display: inline;
+p {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 20px;
+  color: #bbb;
+  margin: 0;
+  letter-spacing: 2px;
+  display: inline;
 }
 
-li{
-	list-style: none;
-	margin: 5px 0px;
-	padding: 0;
+li {
+  list-style: none;
+  margin: 5px 0px;
+  padding: 0;
 }
-.intro{
-	margin: auto;
-	margin-bottom: 20px;
-	padding: 0;
-	width: 230px;
-}
-
-.blackout{
-	width: 100%;
-	height: 100%;
-	background-color: #111;
-	position: relative;
+.intro {
+  margin: auto;
+  margin-bottom: 20px;
+  padding: 0;
+  width: 230px;
 }
 
-.prompt{
-	width: 300px;
-	height: 220px;
-	background-color: #2a2826;
-	position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -110px 0px 0px -150px;
-    padding: 30px;
+.blackout {
+  width: 100%;
+  height: 100%;
+  background-color: #111;
+  position: relative;
 }
 
-.loading{
-	width: 120px;
-	height: 120px;
+.prompt {
+  width: 300px;
+  background-color: #2a2826;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 30px;
 }
 
-.check{
-	width: 15px;
-	height: 15px;
-	margin-right: 10px;
-	fill: #0F0;
+.loading {
+  width: 120px;
+  height: 120px;
 }
 
-input{
-	display: inline;
-	width: 100px;
-	margin: 0;
+.check {
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  fill: #0f0;
+}
+
+input {
+  display: inline;
+  width: 100px;
+  margin: 0;
 }
 
 .pending {
-	fill: #444;
-	color: #444;
+  fill: #444;
+  color: #444;
 }
 
-#datavis{
-	padding: 70px;
-	width: 700px;
-	margin: auto;
+#datavis {
+  padding: 70px;
+  width: 700px;
+  margin: auto;
 }
 
-#visualizer{
-	width: 460px;
-	height: 460px;
-	margin: 0;
-	float: left;
+#visualizer {
+  width: 460px;
+  height: 460px;
+  margin: 0;
+  float: left;
 }
 
-.visualizerinfo{
-	float: left;
-	padding-left: 30px;
+.visualizerinfo {
+  float: left;
+  padding-left: 30px;
 }
 
-.waves{
-	padding: 0;
+.waves {
+  padding: 0;
 }

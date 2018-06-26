@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:8080');
+var socket = io.connect("http://localhost:8080");
 
 var incomingsignal = false;
 var incomingdata = false;
@@ -20,146 +20,156 @@ var highgammawave;
 $("#start").hide();
 $("#datavis").hide();
 
-var csv=[["delta", "theta", "lowAlpha", "highAlpha", "lowBeta", "highBeta", "lowGamma", "highGamma", "attention", "meditation"]];
+if (ready === "false") {
+}
 
-socket.on('neurosky', function(data){
-	
-	socket.emit('signal', data.poorSignalLevel);
+var csv = [
+  [
+    "delta",
+    "theta",
+    "lowAlpha",
+    "highAlpha",
+    "lowBeta",
+    "highBeta",
+    "lowGamma",
+    "highGamma",
+    "attention",
+    "meditation"
+  ]
+];
 
+socket.on("neurosky", function(data) {
+  socket.emit("signal", data.poorSignalLevel);
 
-	if(data.poorSignalLevel >= 150){
-		$(".signal").addClass("pending");
-		$('#check1').css({ fill: "#444" });
-		incomingsignal = true;
-		$(".data").addClass("pending");
-		$('#check2').css({ fill: "#444" });
-		incomingdata = false;
+  if (data.poorSignalLevel >= 150) {
+    $(".signal").addClass("pending");
+    $("#check1").css({ fill: "#444" });
+    incomingsignal = true;
+    $(".data").addClass("pending");
+    $("#check2").css({ fill: "#444" });
+    incomingdata = false;
+  } else {
+    $(".signal").removeClass("pending");
+    $("#check1").css({ fill: "#0F0" });
+    incomingsignal = true;
 
-	} else {
-		$(".signal").removeClass("pending");
-		$('#check1').css({ fill: "#0F0" });
-		incomingsignal = true;
+    if (data.eSense.attention === 0) {
+      $(".data").addClass("pending");
+      $("#check2").css({ fill: "#444" });
+      incomingdata = false;
+    } else {
+      $(".data").removeClass("pending");
+      $("#check2").css({ fill: "#0F0" });
+      incomingdata = true;
+    }
+  }
 
-		if(data.eSense.attention === 0){
-			$(".data").addClass("pending");
-			$('#check2').css({ fill: "#444" });
-			incomingdata = false;
-		} else {
-			$(".data").removeClass("pending");
-			$('#check2').css({ fill: "#0F0" });
-			incomingdata = true;
-			
-		}
-	}
+  filename = $("#filename").val();
+  if (filename.length > 0) {
+    $(".name").removeClass("pending");
+    $("#check3").css({ fill: "#0F0" });
+    incomingfilename = true;
+  } else {
+    $(".name").addClass("pending");
+    $("#check3").css({ fill: "#444" });
+    incomingfilename = false;
+  }
 
-	filename = $("#filename").val();
-	if(filename.length > 0){
-		$(".name").removeClass("pending");
-		$('#check3').css({ fill: "#0F0" });
-		incomingfilename = true;
-	} else {
-		$(".name").addClass("pending");
-		$('#check3').css({ fill: "#444" });
-		incomingfilename = false;
-	}
+  if (incomingdata && incomingsignal && incomingfilename) {
+    ready = true;
+    $(".loading").hide();
+    $("#start").show();
+  } else {
+    $(".loading").show();
+    $("#start").hide();
+  }
 
-	if(incomingdata && incomingsignal && incomingfilename){
-		ready = true;
-		$(".loading").hide();
-		$("#start").show();
-	} else{
-		$(".loading").show();
-		$("#start").hide();
-	}
+  if (ready) {
+    $("#start")
+      .unbind()
+      .click(function() {
+        var filename = $("#filename").val();
+        var regex = /^[a-zA-Z]*$/;
+        if (regex.test(filename)) {
+          logging = true;
 
-	if(ready){
-		$( "#start" ).unbind().click(function() {
-			var filename = $("#filename").val();
-			var regex = /^[a-zA-Z]*$/;
-			if (regex.test(filename)) {
-				logging=true;
+          $(".blackout").hide();
+          $("#datavis").show();
+          $("#testname").text(filename);
+        } else {
+          alert("please use only letters in your test name");
+        }
+      });
 
-			  $(".blackout").hide();
-			  $("#datavis").show();
-			  $("#testname").text(filename);
+    if (logging) {
+      if (data.poorSignalLevel <= 150 && data.eSense.attention > 0) {
+        $("#delta").text("delta: " + data.eegPower.delta);
+        $("#theta").text("theta: " + data.eegPower.theta);
+        $("#lowAlpha").text("low alpha: " + data.eegPower.lowAlpha);
+        $("#highAlpha").text("high alpha: " + data.eegPower.highAlpha);
+        $("#lowBeta").text("low beta: " + data.eegPower.lowBeta);
+        $("#highBeta").text("high beta: " + data.eegPower.highBeta);
+        $("#lowGamma").text("low gamma: " + data.eegPower.lowGamma);
+        $("#highGamma").text("high gamma: " + data.eegPower.highGamma);
 
-			  } else {
-			  	alert("please use only letters in your test name");
-			  }
+        $("#attention").text("attention: " + data.eSense.attention);
+        $("#meditation").text("meditation: " + data.eSense.meditation);
 
-			});
+        deltawave = Math.log(data.eegPower.delta);
+        thetawave = Math.log(data.eegPower.theta);
+        lowalphawave = Math.log(data.eegPower.lowAlpha);
+        highalphawave = Math.log(data.eegPower.highAlpha);
+        lowbetawave = Math.log(data.eegPower.lowBeta);
+        highbetawave = Math.log(data.eegPower.highBeta);
+        lowgammawave = Math.log(data.eegPower.lowGamma);
+        highgammawave = Math.log(data.eegPower.highGamma);
 
-		if(logging){
+        temparray = [];
+        temparray.push(deltawave);
+        temparray.push(Math.log(data.eegPower.theta));
+        temparray.push(Math.log(data.eegPower.lowAlpha));
+        temparray.push(Math.log(data.eegPower.highAlpha));
+        temparray.push(Math.log(data.eegPower.lowBeta));
+        temparray.push(Math.log(data.eegPower.highBeta));
+        temparray.push(Math.log(data.eegPower.lowGamma));
+        temparray.push(Math.log(data.eegPower.highGamma));
+        temparray.push(data.eSense.attention);
+        temparray.push(data.eSense.meditation);
+        csv.push(temparray);
+      } else {
+        $("#delta").text("waiting for signal....");
+        $("#theta").text("waiting for signal....");
+        $("#lowAlpha").text("waiting for signal....");
+        $("#highAlpha").text("waiting for signal....");
+        $("#lowBeta").text("waiting for signal....");
+        $("#highBeta").text("waiting for signal....");
+        $("#lowGamma").text("waiting for signal....");
+        $("#highGamma").text("waiting for signal....");
 
-			if(data.poorSignalLevel <= 150 && data.eSense.attention > 0){
-				$("#delta").text("delta: " + data.eegPower.delta);
-				$("#theta").text("theta: " + data.eegPower.theta);
-				$("#lowAlpha").text("low alpha: " + data.eegPower.lowAlpha);
-				$("#highAlpha").text("high alpha: " + data.eegPower.highAlpha);
-				$("#lowBeta").text("low beta: " + data.eegPower.lowBeta);
-				$("#highBeta").text("high beta: " + data.eegPower.highBeta);
-				$("#lowGamma").text("low gamma: " + data.eegPower.lowGamma);
-				$("#highGamma").text("high gamma: " + data.eegPower.highGamma);
+        $("#attention").text("waiting for signal....");
+        $("#meditation").text("waiting for signal....");
+      }
 
-				$("#attention").text("attention: " + data.eSense.attention);
-				$("#meditation").text("meditation: " + data.eSense.meditation);
+      $("#stoprecording")
+        .unbind()
+        .click(function() {
+          var commas = csv.join("\n");
+          console.log(commas);
 
-				deltawave = Math.log(data.eegPower.delta);
-				thetawave = Math.log(data.eegPower.theta);
-				lowalphawave = Math.log(data.eegPower.lowAlpha);
-				highalphawave = Math.log(data.eegPower.highAlpha);
-				lowbetawave = Math.log(data.eegPower.lowBeta);
-				highbetawave = Math.log(data.eegPower.highBeta);
-				lowgammawave = Math.log(data.eegPower.lowGamma);
-				highgammawave = Math.log(data.eegPower.highGamma);
+          var hiddenElement = document.createElement("a");
 
-				temparray=[];
-				temparray.push(deltawave);
-				temparray.push(Math.log(data.eegPower.theta));
-				temparray.push(Math.log(data.eegPower.lowAlpha));
-				temparray.push(Math.log(data.eegPower.highAlpha));
-				temparray.push(Math.log(data.eegPower.lowBeta));
-				temparray.push(Math.log(data.eegPower.highBeta));
-				temparray.push(Math.log(data.eegPower.lowGamma));
-				temparray.push(Math.log(data.eegPower.highGamma));
-				temparray.push(data.eSense.attention);
-				temparray.push(data.eSense.meditation);
-				csv.push(temparray);
-
-			} else{
-				$("#delta").text("waiting for signal....");
-				$("#theta").text("waiting for signal....");
-				$("#lowAlpha").text("waiting for signal....");
-				$("#highAlpha").text("waiting for signal....");
-				$("#lowBeta").text("waiting for signal....");
-				$("#highBeta").text("waiting for signal....");
-				$("#lowGamma").text("waiting for signal....");
-				$("#highGamma").text("waiting for signal....");
-
-				$("#attention").text("waiting for signal....");
-				$("#meditation").text("waiting for signal....");
-			}
-
-			$( "#stoprecording" ).unbind().click(function() {
-				var commas = csv.join('\n');
-				console.log(commas);
-
-				var hiddenElement = document.createElement('a');
-
-				hiddenElement.href = 'data:attachment/text,' + encodeURI(commas);
-				hiddenElement.target = '_blank';
-				hiddenElement.download = filename + '.csv';
-				hiddenElement.click();
-				alert("data saved!");
-				logging = false;
-				$("#filename").val('');
-				$(".blackout").show();
-			  	$("#datavis").hide();
-			});
-
-		}
-	}
-
+          hiddenElement.href = "data:attachment/text," + encodeURI(commas);
+          hiddenElement.target = "_blank";
+          hiddenElement.download = filename + ".csv";
+          hiddenElement.click();
+          alert("data saved!");
+          logging = false;
+          $("#filename").val("");
+          $(".blackout").show();
+          $("#datavis").hide();
+        });
+    }
+  }
 });
 
 var dotsize = 8;
@@ -171,173 +181,158 @@ var hax;
 var lbx;
 var hbx;
 var lgx;
-var hgx; 
+var hgx;
 
-function setup(){
-	var mycanvas = createCanvas(460, 460);
-	mycanvas.parent('visualizer');
-	deltax = 0;
-	thetax = 0;
-	lax = 0;
-	hax = 0;
-	lbx = 0;
-	hbx = 0;
-	lgx = 0;
-	hgx = 0; 
-
+function setup() {
+  var mycanvas = createCanvas(460, 460);
+  mycanvas.parent("visualizer");
+  deltax = 0;
+  thetax = 0;
+  lax = 0;
+  hax = 0;
+  lbx = 0;
+  hbx = 0;
+  lgx = 0;
+  hgx = 0;
 }
 
 var easing = 0.05;
 
-function draw(){
-	background('#111');
-	noFill();
-	stroke(255);
-	ellipse(width/2, height/2, 450, 450);
-	ellipse(width/2, height/2, 337.5, 337.5);
-	ellipse(width/2, height/2, 225, 225);
-	ellipse(width/2, height/2, 112.5, 112.5);
-	if(logging){
+function draw() {
+  background("#111");
+  noFill();
+  stroke(255);
+  ellipse(width / 2, height / 2, 450, 450);
+  ellipse(width / 2, height / 2, 337.5, 337.5);
+  ellipse(width / 2, height / 2, 225, 225);
+  ellipse(width / 2, height / 2, 112.5, 112.5);
+  if (logging) {
+    translate(width / 2, height / 2);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(0, 255, 0);
+    noStroke();
+    var dmap = map(deltawave, 0, 15.5, 0, width / 2 - 6);
 
-		
+    var targetd = dmap;
 
-		translate(width/2, height/2);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(0, 255, 0);
-		noStroke();
-		var dmap = map(deltawave, 0, 15.5, 0, width/2-6);
+    if (dist(deltax, 0, targetd, 0) >= 1) {
+      deltax += easing * (targetd - deltax);
+    }
 
-		var targetd = dmap;
+    ellipse(deltax, 0, dotsize, dotsize);
 
-		if (dist(deltax, 0, targetd, 0) >= 1) {
-    		deltax += easing * (targetd - deltax);
-  		}
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(255, 255, 0);
+    noStroke();
+    var tmap = map(thetawave, 0, 15.5, 0, width / 2 - 6);
 
-		ellipse(deltax, 0, dotsize, dotsize);
+    var targett = tmap;
 
-		
+    if (dist(thetax, 0, targett, 0) >= 1) {
+      thetax += easing * (targett - thetax);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(255, 255, 0);
-		noStroke();
-		var tmap = map(thetawave, 0, 15.5, 0, width/2-6); 
+    ellipse(thetax, 0, dotsize, dotsize);
 
-		var targett = tmap;
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(0, 255, 255);
+    noStroke();
+    var lamap = map(lowalphawave, 0, 15.5, 0, width / 2 - 6);
 
-		if (dist(thetax, 0, targett, 0) >= 1) {
-    		thetax += easing * (targett - thetax);
-  		}
+    var targetla = lamap;
 
-		ellipse(thetax, 0, dotsize, dotsize);
+    if (dist(lax, 0, targetla, 0) >= 1) {
+      lax += easing * (targetla - lax);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(0, 255, 255);
-		noStroke();
-		var lamap = map(lowalphawave, 0, 15.5, 0, width/2-6); 
+    ellipse(lax, 0, dotsize, dotsize);
 
-		var targetla = lamap;
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(255, 0, 255);
+    noStroke();
+    var hamap = map(highalphawave, 0, 15.5, 0, width / 2 - 6);
 
-		if (dist(lax, 0, targetla, 0) >= 1) {
-    		lax += easing * (targetla - lax);
-  		}
+    var targetha = hamap;
 
-		ellipse(lax, 0, dotsize, dotsize);
+    if (dist(hax, 0, targetha, 0) >= 1) {
+      hax += easing * (targetha - hax);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(255, 0, 255);
-		noStroke();
-		var hamap = map(highalphawave, 0, 15.5, 0, width/2-6); 
+    ellipse(hax, 0, dotsize, dotsize);
 
-		var targetha = hamap;
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(0, 255, 0);
+    noStroke();
+    var lbmap = map(lowbetawave, 0, 15.5, 0, width / 2 - 6);
 
-		if (dist(hax, 0, targetha, 0) >= 1) {
-    		hax += easing * (targetha - hax);
-  		}
+    var targetlb = lbmap;
 
-		ellipse(hax, 0, dotsize, dotsize);
+    if (dist(lbx, 0, targetlb, 0) >= 1) {
+      lbx += easing * (targetlb - lbx);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(0, 255, 0);
-		noStroke();
-		var lbmap = map(lowbetawave, 0, 15.5, 0, width/2-6); 
+    ellipse(lbx, 0, dotsize, dotsize);
 
-		var targetlb = lbmap;
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(255, 255, 0);
+    noStroke();
+    var hbmap = map(highbetawave, 0, 15.5, 0, width / 2 - 6);
 
-		if (dist(lbx, 0, targetlb, 0) >= 1) {
-    		lbx += easing * (targetlb - lbx);
-  		}
+    var targethb = hbmap;
 
-		ellipse(lbx, 0, dotsize, dotsize);
+    if (dist(hbx, 0, targethb, 0) >= 1) {
+      hbx += easing * (targethb - hbx);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(255, 255, 0);
-		noStroke();
-		var hbmap = map(highbetawave, 0, 15.5, 0, width/2-6);
+    ellipse(hbx, 0, dotsize, dotsize);
 
-		var targethb = hbmap;
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(0, 255, 255);
+    noStroke();
+    var lgmap = map(lowgammawave, 0, 15.5, 0, width / 2 - 6);
 
-		if (dist(hbx, 0, targethb, 0) >= 1) {
-    		hbx += easing * (targethb - hbx);
-  		}
+    var targetlg = lgmap;
 
-		ellipse(hbx, 0, dotsize, dotsize);
+    if (dist(lgx, 0, targetlg, 0) >= 1) {
+      lgx += easing * (targetlg - lgx);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(0, 255, 255);
-		noStroke();
-		var lgmap = map(lowgammawave, 0, 15.5, 0, width/2-6);
+    ellipse(lgx, 0, dotsize, dotsize);
 
-		var targetlg = lgmap;
+    rotate(PI / 4.0);
+    noFill();
+    stroke(255);
+    line(0, 0, width / 2 - 6, 0);
+    fill(255, 0, 255);
+    noStroke();
+    var hgmap = map(highgammawave, 0, 15.5, 0, width / 2 - 6);
 
-		if (dist(lgx, 0, targetlg, 0) >= 1) {
-    		lgx += easing * (targetlg - lgx);
-  		}
+    var targethg = hgmap;
 
-		ellipse(lgx, 0, dotsize, dotsize);
+    if (dist(hgx, 0, targethg, 0) >= 1) {
+      hgx += easing * (targethg - hgx);
+    }
 
-		rotate(PI/4.0);
-		noFill();
-		stroke(255);
-		line(0, 0, width/2-6, 0);
-		fill(255, 0, 255);
-		noStroke();
-		var hgmap = map(highgammawave, 0, 15.5, 0, width/2-6);
-
-		var targethg = hgmap;
-
-		if (dist(hgx, 0, targethg, 0) >= 1) {
-    		hgx += easing * (targethg - hgx);
-  		}
-
-		ellipse(hgx, 0, dotsize, dotsize);
-	}
-
-
-
-
+    ellipse(hgx, 0, dotsize, dotsize);
+  }
 }
-
-
-
-
-

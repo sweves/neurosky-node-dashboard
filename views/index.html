@@ -1,90 +1,96 @@
 <html>
 <head>
-	<title></title>
-	<link href='https://fonts.googleapis.com/css?family=Dosis:400,500,600,700,800,300,200' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Dosis:400,500,600,700,800,300,200' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
 </head>
 <body>
 
-	<!-- loading box -->
+<!-- loading box -->
 
-	<div class="blackout">
-		<div class="prompt">
-			<ul class="intro">
-				<li>
-					<svg class="check pending" version="1.1" id="check1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-					width="288px" height="288.001px" viewBox="162.5 171.5 288 288.001" enable-background="new 162.5 171.5 288 288.001"
-					xml:space="preserve">
-					<path d="M204.577,213.676c-56.235,56.235-56.234,147.411,0,203.646c56.234,56.236,147.412,56.236,203.647,0
-					c56.234-56.234,56.234-147.412,0-203.646C351.988,157.441,260.811,157.442,204.577,213.676z M387.858,396.959
-					c-44.988,44.982-117.929,44.984-162.917,0c-44.989-44.988-44.988-117.931,0-162.918c44.989-44.989,117.929-44.988,162.918-0.001
-					C432.848,279.03,432.848,351.97,387.858,396.959z"/>
-					<path d="M292,389.2c-3.421,0-6.757-1.22-9.384-3.479l-50.4-43.312c-6.032-5.183-6.72-14.275-1.537-20.307
-					c5.183-6.032,14.275-6.72,20.306-1.537l38.06,32.704l62.975-94.462c4.41-6.616,13.35-8.406,19.969-3.994
-					c6.616,4.412,8.405,13.352,3.99,19.97l-72,108c-2.288,3.432-5.937,5.717-10.022,6.279C293.306,389.155,292.65,389.2,292,389.2z"/>
-				</svg>
-				<p id="s" class ="signal pending">signal detected</p>
-			</li>
-			<li>
-				<svg class="check pending" version="1.1" id="check2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-				width="288px" height="288.001px" viewBox="162.5 171.5 288 288.001" enable-background="new 162.5 171.5 288 288.001"
-				xml:space="preserve">
-				<path d="M204.577,213.676c-56.235,56.235-56.234,147.411,0,203.646c56.234,56.236,147.412,56.236,203.647,0
-				c56.234-56.234,56.234-147.412,0-203.646C351.988,157.441,260.811,157.442,204.577,213.676z M387.858,396.959
-				c-44.988,44.982-117.929,44.984-162.917,0c-44.989-44.988-44.988-117.931,0-162.918c44.989-44.989,117.929-44.988,162.918-0.001
-				C432.848,279.03,432.848,351.97,387.858,396.959z"/>
-				<path d="M292,389.2c-3.421,0-6.757-1.22-9.384-3.479l-50.4-43.312c-6.032-5.183-6.72-14.275-1.537-20.307
-				c5.183-6.032,14.275-6.72,20.306-1.537l38.06,32.704l62.975-94.462c4.41-6.616,13.35-8.406,19.969-3.994
-				c6.616,4.412,8.405,13.352,3.99,19.97l-72,108c-2.288,3.432-5.937,5.717-10.022,6.279C293.306,389.155,292.65,389.2,292,389.2z"/>
-			</svg>
-			<p class="data pending">receiving data</p>
-		</li>
-		<li>
-			<svg class="check pending" version="1.1" id="check3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-			width="288px" height="288.001px" viewBox="162.5 171.5 288 288.001" enable-background="new 162.5 171.5 288 288.001"
-			xml:space="preserve">
-			<path d="M204.577,213.676c-56.235,56.235-56.234,147.411,0,203.646c56.234,56.236,147.412,56.236,203.647,0
-			c56.234-56.234,56.234-147.412,0-203.646C351.988,157.441,260.811,157.442,204.577,213.676z M387.858,396.959
-			c-44.988,44.982-117.929,44.984-162.917,0c-44.989-44.988-44.988-117.931,0-162.918c44.989-44.989,117.929-44.988,162.918-0.001
-			C432.848,279.03,432.848,351.97,387.858,396.959z"/>
-			<path d="M292,389.2c-3.421,0-6.757-1.22-9.384-3.479l-50.4-43.312c-6.032-5.183-6.72-14.275-1.537-20.307
-			c5.183-6.032,14.275-6.72,20.306-1.537l38.06,32.704l62.975-94.462c4.41-6.616,13.35-8.406,19.969-3.994
-			c6.616,4.412,8.405,13.352,3.99,19.97l-72,108c-2.288,3.432-5.937,5.717-10.022,6.279C293.306,389.155,292.65,389.2,292,389.2z"/>
-		</svg>
-		<p class="name pending">test name
-		<input type="text" id="filename" name="filename" maxlength="10"></p>
-	</li>
-</ul>
+<div class="blackout">
+    <div class="prompt">
+        <ul class="intro">
+            <li>
+                <svg class="check pending" version="1.1" id="check1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="288px" height="288.001px" viewBox="162.5 171.5 288 288.001" enable-background="new 162.5 171.5 288 288.001"
+                    xml:space="preserve">
+                    <path d="M204.577,213.676c-56.235,56.235-56.234,147.411,0,203.646c56.234,56.236,147.412,56.236,203.647,0
+                    c56.234-56.234,56.234-147.412,0-203.646C351.988,157.441,260.811,157.442,204.577,213.676z M387.858,396.959
+                    c-44.988,44.982-117.929,44.984-162.917,0c-44.989-44.988-44.988-117.931,0-162.918c44.989-44.989,117.929-44.988,162.918-0.001
+                    C432.848,279.03,432.848,351.97,387.858,396.959z"/>
+                    <path d="M292,389.2c-3.421,0-6.757-1.22-9.384-3.479l-50.4-43.312c-6.032-5.183-6.72-14.275-1.537-20.307
+                    c5.183-6.032,14.275-6.72,20.306-1.537l38.06,32.704l62.975-94.462c4.41-6.616,13.35-8.406,19.969-3.994
+                    c6.616,4.412,8.405,13.352,3.99,19.97l-72,108c-2.288,3.432-5.937,5.717-10.022,6.279C293.306,389.155,292.65,389.2,292,389.2z"/>
+                </svg>
+                <p id="s" class ="signal pending">signal detected</p>
+            </li>
+            <li>
+                <svg class="check pending" version="1.1" id="check2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                width="288px" height="288.001px" viewBox="162.5 171.5 288 288.001" enable-background="new 162.5 171.5 288 288.001"
+                xml:space="preserve">
+                <path d="M204.577,213.676c-56.235,56.235-56.234,147.411,0,203.646c56.234,56.236,147.412,56.236,203.647,0
+                c56.234-56.234,56.234-147.412,0-203.646C351.988,157.441,260.811,157.442,204.577,213.676z M387.858,396.959
+                c-44.988,44.982-117.929,44.984-162.917,0c-44.989-44.988-44.988-117.931,0-162.918c44.989-44.989,117.929-44.988,162.918-0.001
+                C432.848,279.03,432.848,351.97,387.858,396.959z"/>
+                <path d="M292,389.2c-3.421,0-6.757-1.22-9.384-3.479l-50.4-43.312c-6.032-5.183-6.72-14.275-1.537-20.307
+                c5.183-6.032,14.275-6.72,20.306-1.537l38.06,32.704l62.975-94.462c4.41-6.616,13.35-8.406,19.969-3.994
+                c6.616,4.412,8.405,13.352,3.99,19.97l-72,108c-2.288,3.432-5.937,5.717-10.022,6.279C293.306,389.155,292.65,389.2,292,389.2z"/>
+                </svg>
+            <p class="data pending">receiving data</p>
+        </li>
+        <li>
+            <svg class="check pending" version="1.1" id="check3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="288px" height="288.001px" viewBox="162.5 171.5 288 288.001" enable-background="new 162.5 171.5 288 288.001"
+            xml:space="preserve">
+            <path d="M204.577,213.676c-56.235,56.235-56.234,147.411,0,203.646c56.234,56.236,147.412,56.236,203.647,0
+            c56.234-56.234,56.234-147.412,0-203.646C351.988,157.441,260.811,157.442,204.577,213.676z M387.858,396.959
+            c-44.988,44.982-117.929,44.984-162.917,0c-44.989-44.988-44.988-117.931,0-162.918c44.989-44.989,117.929-44.988,162.918-0.001
+            C432.848,279.03,432.848,351.97,387.858,396.959z"/>
+            <path d="M292,389.2c-3.421,0-6.757-1.22-9.384-3.479l-50.4-43.312c-6.032-5.183-6.72-14.275-1.537-20.307
+            c5.183-6.032,14.275-6.72,20.306-1.537l38.06,32.704l62.975-94.462c4.41-6.616,13.35-8.406,19.969-3.994
+            c6.616,4.412,8.405,13.352,3.99,19.97l-72,108c-2.288,3.432-5.937,5.717-10.022,6.279C293.306,389.155,292.65,389.2,292,389.2z"/>
+            </svg>
+            <p class="name pending">test name
+            <input type="text" id="filename" name="filename" maxlength="10"></p>
+        </li>
+    </ul>
 
-<center><img class="loading" src="img/loading.gif"><button id="start" type="button" >Start</button></center>
+    <center><img class="loading" src="img/loading.gif"><button id="start" type="button" >Start</button></center>
+
+    <li id="no-connection" class="no-connection">
+        This is a demo - please reach out to test with neurosky headset
+
+        <a href="">[ source code ]</a>
+    </li>
 
 </div>
 </div>
 
 <!-- data vis -->
 <div id ="datavis">
-	<div id="visualizer">
+    <div id="visualizer">
 
-	</div>
-	<div class="visualizerinfo">
-		<h1 id ="testname"></h1>
-		<ul class="waves">
-			<li><p id="delta">delta:</p></li>
-			<li><p id="theta">theta:</p></li>
-			<li><p id="lowAlpha">low alpha:</p></li>
-			<li><p id="highAlpha">high alpha:</p></li>
-			<li><p id="lowBeta">low beta:</p></li>
-			<li><p id="highBeta">high beta:</p></li>
-			<li><p id="lowGamma">low gamma:</p></li>
-			<li><p id="highGamma">high gamma:</p></li>
-		</ul>
+    </div>
+    <div class="visualizerinfo">
+        <h1 id ="testname"></h1>
+        <ul class="waves">
+            <li><p id="delta">delta:</p></li>
+            <li><p id="theta">theta:</p></li>
+            <li><p id="lowAlpha">low alpha:</p></li>
+            <li><p id="highAlpha">high alpha:</p></li>
+            <li><p id="lowBeta">low beta:</p></li>
+            <li><p id="highBeta">high beta:</p></li>
+            <li><p id="lowGamma">low gamma:</p></li>
+            <li><p id="highGamma">high gamma:</p></li>
+        </ul>
 
-		<ul class="waves">
-			<li><p id="attention">attention:</p></li>
-			<li><p id="meditation">meditation:</p></li>
-		</ul>
-		<button id="stoprecording" type="button">stop recording</button>
-	</div>
+        <ul class="waves">
+            <li><p id="attention">attention:</p></li>
+            <li><p id="meditation">meditation:</p></li>
+        </ul>
+        <button id="stoprecording" type="button">stop recording</button>
+    </div>
 </div>
 
 
