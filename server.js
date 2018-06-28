@@ -15,12 +15,12 @@ var server = app.listen(8000, function() {
 
 var io = require("socket.io")(server);
 
-var neurosky = require("node-neurosky");
+// var neurosky = require("node-neurosky");
 
-var client = neurosky.createClient({
-  appName: "NeuroSky",
-  appKey: "0fc4141b4b45c675cc8d3a765b8d71c5bde9390"
-});
+// var client = neurosky.createClient({
+//   appName: "NeuroSky",
+//   appKey: "0fc4141b4b45c675cc8d3a765b8d71c5bde9390"
+// });
 
 var $socket;
 io.on("connection", function(socket) {
@@ -34,9 +34,9 @@ io.on("connection", function(socket) {
 var meditationvalue;
 var meditationarray = [];
 
-client.on("data", function(data) {
-  console.log(data);
+// client.on("data", function(data) {
+//   console.log(data);
 
-  $socket.emit("neurosky", data);
-  meditationvalue = data.eSense.meditation;
-});
+//   $socket.emit("neurosky", data);
+//   meditationvalue = data.eSense.meditation;
+// });
